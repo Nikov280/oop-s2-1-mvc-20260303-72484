@@ -1,0 +1,37 @@
+﻿@model CreateInvoiceViewModel
+
+<h2>Nueva Factura</h2>
+
+<form asp-action="Create" method="post">
+    <div class="card mb-3">
+        <div class="card-header">Cabecera</div>
+        <div class="card-body">
+            <label>Cliente:</label>
+            <input asp-for="SelectedCustomer" class="form-control" placeholder="Nombre del cliente" />
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Añadir Línea de Detalle (Sin JS)</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Producto:</label>
+                    <select asp-for="SingleLine.ProductId" asp-items="Model.ProductList" class="form-control">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label>Cantidad:</label>
+                    <input asp-for="SingleLine.Quantity" type="number" class="form-control" value="1" />
+                </div>
+                <div class="col-md-3">
+                    <label>Precio Unitario:</label>
+                    <input asp-for="SingleLine.Price" type="number" step="0.01" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Guardar Factura Completa</button>
+</form>

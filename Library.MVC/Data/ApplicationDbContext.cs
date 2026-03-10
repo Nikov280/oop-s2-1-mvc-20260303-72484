@@ -7,7 +7,9 @@ namespace Library.MVC.Data
 {    
         public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
         {
-        public DbSet<Product> Products { get; set; }
-        }
+        public DbSet<Product> Products { get; set; }        
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceLine> InvoiceLines { get; set; }
+    }
     
 }
