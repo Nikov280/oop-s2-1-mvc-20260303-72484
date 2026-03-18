@@ -2,15 +2,17 @@ name: Test & Publish Coverage
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -21,21 +23,19 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --configuration Release --no-restore
 
-    
     - name: Test
-      run: dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/
+      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: './**/TestResults/coverage.opencover.xml' 
+        reports: '**/TestResults/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         reporttypes: 'HtmlInline'
 
-    
-    - name: Upload Report
+    - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: CoverageReport
