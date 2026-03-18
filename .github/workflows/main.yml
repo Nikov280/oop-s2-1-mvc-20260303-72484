@@ -7,9 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
 
@@ -22,27 +21,22 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --no-restore --configuration Release
 
     
     - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.xml
+      run: dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/
 
-    
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: './**/TestResults/coverage.xml'
+        reports: './**/TestResults/coverage.opencover.xml' 
         targetdir: 'coveragereport'
         reporttypes: 'HtmlInline'
 
     
-    - name: Publish
-      run: dotnet publish Library.MVC/Library.MVC.csproj -c Release -o release
-
-    
-    - name: Upload Coverage Report
+    - name: Upload Report
       uses: actions/upload-artifact@v3
       with:
-        name: coverage-report
+        name: CoverageReport
         path: coveragereport
