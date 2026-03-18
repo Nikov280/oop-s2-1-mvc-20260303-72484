@@ -26,13 +26,13 @@ jobs:
 
     
     - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test --configuration Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.xml
 
     
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: '**/TestResults/*/coverage.cobertura.xml'
+        reports: './**/TestResults/coverage.xml'
         targetdir: 'coveragereport'
         reporttypes: 'HtmlInline'
 
