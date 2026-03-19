@@ -44,17 +44,22 @@ namespace Library.Tests
             // Arrange
             var books = new List<Book>
     {
-        new Book { Title = "C# Programming", Author = "Author A" },
+        new Book { Title = "Dotnet Programming", Author = "Author A" },
         new Book { Title = "Java Basics", Author = "Author B" },
-        new Book { Title = "C# Advanced", Author = "Author C" }
+        new Book { Title = "Dotnet Advanced", Author = "Author C" }
     };
-            string searchTerm = "C#";
+            
+            string searchTerm = "Dotnet";
 
-
-            var results = books.Where(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            // Act
+            var results = books
+                .Where(b => b.Title.ToLower().Contains(searchTerm.ToLower()))
+                .ToList();
 
             // Assert
-            Assert.Equal(2, results.Count); // Ahora debería encontrar los 2 de C#
+            Assert.NotNull(results);
+            Assert.Equal(2, results.Count);
+            Assert.True(results.All(b => b.Title.Contains(searchTerm)));
         }
 
         // 4. Overdue logic: DueDate < Today and ReturnedDate is null
