@@ -7,43 +7,23 @@ on:
     branches: [ master, main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout del código
       uses: actions/checkout@v3
 
-    - name: Setup .NET
+    - name: Configurar .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
 
-    - name: Restore dependencies
+    - name: Restaurar Paquetes
       run: dotnet restore
 
-    - name: Build
+    - name: Compilar Proyecto
       run: dotnet build --configuration Release --no-restore
-          
-    - name: Test
-      run: |
-        dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
-    - name: ReportGenerator
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
-      with:
-        reports: 'TestResults/**/coverage.cobertura.xml'
-        targetdir: 'coveragereport'
-        reporttypes: 'HtmlInline'
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: CoverageReport
-        path: coveragereport
-
-    - name: Deploy Coverage Report
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./coveragereport
+    - name: Ejecutar Tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
