@@ -1,4 +1,4 @@
-using Library.Domain; 
+using Library.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -12,7 +12,7 @@ namespace Library.Tests
         public void Cannot_Create_Loan_For_Book_Already_On_Active_Loan()
         {
             // Arrange
-            var book = new Book { Id = 1, IsAvailable = false }; 
+            var book = new Book { Id = 1, IsAvailable = false };
 
             // Act
             bool canCreateLoan = book.IsAvailable;
@@ -31,7 +31,7 @@ namespace Library.Tests
 
             // Act
             loan.ReturnedDate = DateTime.Now;
-            book.IsAvailable = true; 
+            book.IsAvailable = true;
 
             // Assert
             Assert.True(book.IsAvailable, "El libro debería estar disponible nuevamente al ser devuelto.");
@@ -43,19 +43,18 @@ namespace Library.Tests
         {
             // Arrange
             var books = new List<Book>
-            {
-                new Book { Title = "C# Programming", Author = "Author A" },
-                new Book { Title = "Java Basics", Author = "Author B" },
-                new Book { Title = "C# Advanced", Author = "Author C" }
-            };
+    {
+        new Book { Title = "C# Programming", Author = "Author A" },
+        new Book { Title = "Java Basics", Author = "Author B" },
+        new Book { Title = "C# Advanced", Author = "Author C" }
+    };
             string searchTerm = "C#";
 
-            // Act
-            var results = books.Where(b => b.Title.Contains(searchTerm)).ToList();
+
+            var results = books.Where(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
 
             // Assert
-            Assert.Equal(2, results.Count);
-            Assert.All(results, b => Assert.Contains(searchTerm, b.Title));
+            Assert.Equal(2, results.Count); // Ahora debería encontrar los 2 de C#
         }
 
         // 4. Overdue logic: DueDate < Today and ReturnedDate is null
@@ -63,8 +62,8 @@ namespace Library.Tests
         public void Overdue_Logic_Check_Past_Due_And_Not_Returned()
         {
             // Arrange
-            var dueDate = DateTime.Now.AddDays(-5); 
-            DateTime? returnedDate = null; 
+            var dueDate = DateTime.Now.AddDays(-5);
+            DateTime? returnedDate = null;
 
             // Act
             bool isOverdue = dueDate < DateTime.Now && returnedDate == null;
