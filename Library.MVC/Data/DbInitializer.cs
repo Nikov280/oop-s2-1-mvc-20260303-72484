@@ -13,7 +13,7 @@ namespace Library.MVC.Data
         {
             context.Database.EnsureCreated();
 
-            // 1. Seed Admin Role and User
+            // 1. Seed Admin Role
             if (!roleManager.RoleExistsAsync("Admin").Result)
             {
                 roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
@@ -29,7 +29,7 @@ namespace Library.MVC.Data
                 userManager.AddToRoleAsync(adminUser, "Admin").Wait();
             }
 
-            // Si ya hay libros, no duplicamos datos
+            
             if (context.Books.Any()) return;
 
             // 2. Seed Members
@@ -54,7 +54,7 @@ namespace Library.MVC.Data
             context.Books.AddRange(books);
             context.SaveChanges();
 
-            // 4. Seed Loans (Asociados al Admin para que los veas al loguearte)
+            // 4. Seed Loans
             var random = new Random();
             for (int i = 0; i < 15; i++)
             {
@@ -66,7 +66,7 @@ namespace Library.MVC.Data
                 {
                     BookId = book.Id,
                     MemberId = members[random.Next(0, 10)].Id,
-                    UserId = adminUser.Id, // <--- VINCULAMOS AL ADMIN
+                    UserId = adminUser.Id, 
                     LoanDate = DateTime.Now.AddDays(-15),
                     DueDate = isOverdue ? DateTime.Now.AddDays(-2) : DateTime.Now.AddDays(7),
                     ReturnedDate = isReturned ? DateTime.Now.AddDays(-1) : null
@@ -74,7 +74,7 @@ namespace Library.MVC.Data
 
                 if (!isReturned) book.IsAvailable = false;
 
-                // AGREGAMOS CADA PRÉSTAMO AL CONTEXTO
+                
                 context.Loans.Add(loan);
             }
             context.SaveChanges();
